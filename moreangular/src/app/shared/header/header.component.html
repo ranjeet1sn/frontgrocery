@@ -1,0 +1,19 @@
+<mat-toolbar color="primary" style="cursor: pointer;">
+  <mat-icon (click)="onClick()" class="ml-3">menu</mat-icon>
+  <p routerLink="" class="mt-3 ml-3">Employee Info</p>
+  <div fxFlex fxLayoutAlign="flex-end center" *ngIf="!showCondtion">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/document">
+        <mat-icon>description</mat-icon>
+        <span>Add Document</span>
+      </button>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>input</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,67 @@
+<div class="ml-3 mt-2">
+  <form [formGroup]="from" (ngSubmit)="addEmployee()">
+    <mat-form-field appearance="outline" class="mt-3">
+      <input type="text" formControlName="name" matInput placeholder="Enter Name">
+    </mat-form-field>
+    <mat-error *ngIf="from.controls.name.touched && from.controls.name.hasError('required')">Name is
+      required</mat-error>
+    <mat-error *ngIf="from.controls.name.touched && from.controls.name.hasError('minlength')">Minlength
+      should be 4</mat-error>
+    <input type="file" #takeInput accept="image/*" (change)="onChange($event)" style="width: fit-content;"
+      class="form-control"><br>
+    <img [src]="previewUrl" *ngIf="previewUrl" width="100px" height="100px" class="mb-2" /><br>
+    <mat-form-field appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select #searchBy formControlName="role" [(value)]="selectedSearchByOptions"
+        (selectionChange)="searchField = $event.value.value" [compareWith]="compareSearchByOption">
+        <mat-option *ngFor="let searchOption of searchByOptionList" [value]="searchOption">{{searchOption.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field><br>
+    <button type="submit" [disabled]="from.invalid"
+      class="btn btn-success mb-4">{{submitForm === false ? 'Add Employee': 'Update Employee'}}</button>
+  </form>
+</div>
+<mat-divider class="mb-2"></mat-divider>
+<ng-container *ngIf="data?.length>0;let i=index;else nodata">
+  <button mat-raised-button color="primary" style="float:right;" class="mr-2 mt-3" (click)="clearfilter()">Reset
+    <mat-icon>close</mat-icon></button>
+  <mat-form-field appearance="outline" style="float: right;">
+    <mat-label>Sort By</mat-label>
+    <mat-select (selectionChange)="onSort($event)">
+      <mat-option value="asending">Ascending</mat-option>
+      <mat-option value="desending">Descending</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="  mr-2 " style="float: right;">
+    <input type="text" matInput [(ngModel)]="search" placeholder="Search Employee" style="width:fit-content">
+  </mat-form-field>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Seriel No</th>
+        <th>Employee ID</th>
+        <th>Employee Image</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let ele of data|filter:search|paginate: { itemsPerPage: 5, currentPage: p }let i=index">
+      <tr>
+        <td>{{i+1}}</td>
+        <td>{{ele._id}}</td>
+        <td> <img [src]="ele.image.base64" height="80px" width="80px" class="ml-5" (click)="showPreview(ele)" /></td>
+        <td>{{ele.name |uppercase}}</td>
+        <td>{{ele.role}}</td>
+        <button type="button" (click)="update(ele)" class="mt-1 mr-3 ml-1 btn btn-info">Update</button>
+        <button type="button" (click)="deleteEmployee(ele)" class="mt-1 btn btn-danger">Delete</button>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+</ng-container>
+<ng-template #nodata>
+  <app-no-data [condtion2]="true"></app-no-data>
+</ng-template>
+<ngx-spinner></ngx-spinner>

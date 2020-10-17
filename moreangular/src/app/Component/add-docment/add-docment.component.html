@@ -1,0 +1,35 @@
+<div class="dropzone" appDnd (fileDropped)="onFileDropped($event)">
+  <div class="text-wrapper">
+    <div class="centered">Drop your file here!</div>
+  </div>
+
+</div>
+<div class="files-list ml-4 mt-2">
+  <div class="single-file" *ngFor="let file of files; let i = index">
+    <div class="info">
+      <h4 class="name">
+        {{ file?.name }}
+      </h4>
+      <p class="size">
+        {{ formatBytes(file?.size) }}
+      </p>
+    </div>
+  </div>
+</div>
+<button (click)="savefile()" mat-raised-button color="primary" [disabled]="!condition" class="mt-3 ml-3">Save
+  File</button>
+<button (click)="cancel()" mat-raised-button color="warn" *ngIf="condition" class="mt-3 ml-3">
+  Cancel</button>
+<h4 class="ml-3 mt-4" *ngIf="document?.length>0">Employee Personal Document</h4>
+<ng-container *ngIf="document?.length>0;else nodata">
+  <mat-list role="list" *ngFor="let ele of document;let i=index">
+    <mat-list-item role="listitem">
+      {{(ele.data)}}
+    </mat-list-item>
+    <button style="float:right" class="btn btn-danger mb-5 mr-4 " (click)="deleteRecord(ele._id,i)">Delete</button>
+  </mat-list>
+</ng-container>
+<ng-template #nodata>
+  <app-no-data [condtion1]="true"></app-no-data>
+</ng-template>
+<ngx-spinner></ngx-spinner>
